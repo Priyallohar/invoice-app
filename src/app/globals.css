@@ -1,12 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+
+
 
 @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground:231 20% 27%;
-    --custom-color:252, 94%, 67%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
@@ -30,6 +35,18 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    --primary-purple: 252, 94%, 67%;
+    --secondary-purple: 252, 100%, 73%;
+    --dark-navy: 233, 31%, 17%;
+    --slate-navy: 233, 30%, 21%;
+    --light-blue: 231, 73%, 93%;
+    --medium-gray: 231, 20%, 61%;
+    --cool-gray: 231, 37%, 63%;
+    --deep-black: 228, 29%, 7%;
+    --red:0, 80%, 63%;
+    --faded-red:0, 100%, 80%;
+    --light-background: 240, 27%, 98%;
+    --dark-background: 233, 30%, 11%;
   }
 
   .dark {
@@ -65,6 +82,7 @@
     @apply border-border;
   }
   body {
+    font-family: "League Spartan";
     @apply bg-background text-foreground;
   }
 }

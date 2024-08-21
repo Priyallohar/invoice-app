@@ -21,7 +21,7 @@ const Hero = () => {
   return (
     <aside className="fixed inset-y-0 left-0 z-10 overflow-hidden  hidden w-20 rounded-tr-[25px] rounded-br-[25px] flex-col border-r bg-foreground sm:flex">
       <nav className="flex flex-col items-center  ">
-        <div className="bg-custom w-full h-20 flex items-center justify-center rounded-br-[25px] ">
+        <div className="bg-primaryPurple w-full h-20 flex items-center justify-center rounded-br-[25px] ">
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="26">
           <path
             fill="#FFF"
