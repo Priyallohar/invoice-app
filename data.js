@@ -1,4 +1,4 @@
-[
+export const Data = [
   {
     "id": "RT3080",
     "createdAt": "2021-08-18",
@@ -131,7 +131,7 @@
   },
   {
     "id": "AA1449",
-    "createdAt": "2021-10-7",
+    "createdAt": "2021-10-07",
     "paymentDue": "2021-10-14",
     "description": "Re-branding",
     "paymentTerms": 7,
@@ -182,7 +182,7 @@
       "country": "United Kingdom"
     },
     "clientAddress": {
-      "street": "3964  Queens Lane",
+      "street": "3964 Queens Lane",
       "city": "Gotham",
       "postCode": "60457",
       "country": "United States of America"
