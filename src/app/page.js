@@ -12,7 +12,7 @@ import Sidebar from "@/components/Sidebar";
 
 export default function Home() {
   return (
-      <main className="relative w-full bg-lightBackground">
+      <main className="relative w-full flex items-center justify-center bg-lightBackground">
         <InvoiceList/>
       </main>
   );

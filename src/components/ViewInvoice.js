@@ -23,6 +23,7 @@ const ViewInvoice = ({invoiceId}) => {
   const openEditSidebar = () => setIsEditOpen(true);
   const closeEditSidebar = () => {
     console.log("i am clicked");
+    console.log(clickedInvoice)
     setIsEditOpen(false);
   };
 
@@ -129,13 +130,13 @@ const ViewInvoice = ({invoiceId}) => {
                 </div>
 
                 <address className="text-[13px] font-normal text-coolGray">
-                {clickedInvoice.clientAddress.street}
+                {clickedInvoice.senderAddress.street}
                   <br />
-                  {clickedInvoice.clientAddress.city}
+                  {clickedInvoice.senderAddress.city}
                   <br />
-                  {clickedInvoice.clientAddress.postCode}
+                  {clickedInvoice.senderAddress.postCode}
                   <br />
-                  {clickedInvoice.clientAddress.country}
+                  {clickedInvoice.senderAddress.country}
                 </address>
               </div>
 
@@ -156,16 +157,27 @@ const ViewInvoice = ({invoiceId}) => {
                     <span className="text-sm font-bold">
                       {formateDate(clickedInvoice.paymentDue)}
                     </span>
+
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-3">
                   <span className="text-[13px] font-normal text-coolGray">
                     Bill To
                   </span>
                   <span className="text-sm font-bold">
                     {clickedInvoice.clientName}
                   </span>
+                  <div className="text-[13px] font-normal text-coolGray">
+                  {clickedInvoice.clientAddress.street}
+                  <br />
+                  {clickedInvoice.clientAddress.city}
+                  <br />
+                  {clickedInvoice.clientAddress.postCode}
+                  <br />
+                  {clickedInvoice.clientAddress.country}
+                  </div>
+
                 </div>
 
                 <div className="flex flex-col gap-4">

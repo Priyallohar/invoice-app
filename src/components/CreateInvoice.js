@@ -1,18 +1,82 @@
 "use client";
 import React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import { useDispatch } from "react-redux";
+import {addInvoice} from"./store/Datamanagment"
 
-const CreateInvoice = ({
-  isEditOpen,
-  closeEdit,
-  newInvoice,
-  closeNewInvoice,
-}) => {
+const CreateInvoice = ({ isEditOpen,closeEdit,newInvoice,closeNewInvoice,}) => {
+  const dispatch = useDispatch();
   const [rows, setRows] = useState([
     { id: 1, name: "", quantity: "", price: "", total: "" },
   ]);
+  const [formData, setFormData] = useState({
+      "id": "",
+      "createdAt": "",
+      "paymentDue": "",
+      "description": "",
+      "paymentTerms":"" ,
+      "clientName": "",
+      "clientEmail": "",
+      "status": "",
+      "senderAddress": {
+        "street": "",
+        "city": "",
+        "postCode": "",
+        "country": ""
+      },
+      "clientAddress": {
+        "street": "",
+        "city": "",
+        "postCode": "",
+        "country": ""
+      },
+      "items": [
+        {
+          "name": "",
+          "quantity":"" ,
+          "price": "",
+          "total": "",
+        }
+      ],
+      "total": ""
+  });
+
 
   const isOpen = isEditOpen || newInvoice;
+
+  const generateId = () => {
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const randomLetters = letters[Math.floor(Math.random() * 26)] + letters[Math.floor(Math.random() * 26)];
+    const randomNumber = Math.floor(1000 + Math.random() * 9000);
+    return `${randomLetters}${randomNumber}`;
+  };
+
+  useEffect(() => {
+    if (newInvoice) {
+      const newId = generateId();
+      setFormData(prevState => ({ ...prevState, id: newId }));
+    }
+  }, [newInvoice]);
+
+
+  const handleInputChange = (e, section = null) => {
+    const { name, value } = e.target;
+    if (section) {
+      setFormData(prevState => ({
+        ...prevState,
+        [section]: {
+          ...prevState[section],
+          [name]: value
+        }
+      }));
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    }
+  };
+
 
   const handleAddItems = (e) => {
     e.preventDefault();  
@@ -25,7 +89,8 @@ const CreateInvoice = ({
     };
     setRows([...rows, newRow]);
   };
-  const handleInputChange = (id, field, value) => {
+  
+  const handleitemChange = (id, field, value) => {
     const updatedRows = rows.map((row) => {
       if (row.id === id) {
         const updatedRow = { ...row, [field]: value };
@@ -58,6 +123,88 @@ const CreateInvoice = ({
       alert("At least one row is required.");
     }
   };
+
+  const determineStatus = (dueDate, currentStatus) => {
+    const today = new Date();
+    const paymentDue = new Date(dueDate);
+    if (currentStatus === 'paid') {
+      return 'paid';
+    } else if (paymentDue < today) {
+      return 'overdue';
+    } else {
+      return 'pending';
+    }
+  };
+
+  
+  const submitHandler = (e,action) => {
+    e.preventDefault();
+  
+    const total = rows.reduce((acc, row) => acc + parseFloat(row.total || 0), 0);
+  
+    let status;
+    switch (action) {
+      case 'save_draft':
+        status = 'draft';
+        break;
+      case 'save_send':
+        status = determineStatus(formData.paymentDue, formData.status);
+        break;
+      default:
+        status = formData.status || 'pending';
+    }
+  
+    const invoiceData = {
+      ...formData,
+      items: rows,
+      total: total.toFixed(2),
+      status: status
+    };
+  
+    if (isEditOpen) {
+      dispatch(updateInvoice(invoiceData));
+      closeEdit();
+    } else {
+      dispatch(addInvoice(invoiceData));
+      closeNewInvoice();
+    }
+  
+    // Reset formData and rows after submission
+    setFormData({
+      id: "",
+      createdAt: "",
+      paymentDue: "",
+      description: "",
+      paymentTerms: "",
+      clientName: "",
+      clientEmail: "",
+      status: "",
+      senderAddress: {
+        street: "",
+        city: "",
+        postCode: "",
+        country: ""
+      },
+      clientAddress: {
+        street: "",
+        city: "",
+        postCode: "",
+        country: ""
+      },
+      items: [
+        {
+          name: "",
+          quantity: "",
+          price: "",
+          total: "",
+        }
+      ],
+      total: ""
+    });
+  
+    setRows([{ id: 1, name: "", quantity: "", price: "", total: "" }]);
+  };
+  
   
 
   return (
@@ -69,7 +216,7 @@ const CreateInvoice = ({
               New Invoice
             </header>
 
-            <form>
+            <form onSubmit={submitHandler}>
               <div className="mb-12">
                 <h4 className="text-primaryPurple font-bold text-base mb-6">
                   Bill Form
@@ -86,8 +233,11 @@ const CreateInvoice = ({
                     <input
                       className="border rounded-[4px] font-bold text-base  h-10 w-full pl-5 focus:outline-none focus:border-primaryPurple"
                       id="street-address"
-                      name="street-address"
+                      name="street"
                       type="text"
+                      value={formData.senderAddress.street}
+                      required
+                      onChange={(e) => handleInputChange(e, "senderAddress")}
                     />
                   </div>
 
@@ -104,6 +254,9 @@ const CreateInvoice = ({
                         id="city"
                         name="city"
                         type="text"
+                        value={formData.senderAddress.city}
+                        onChange={(e) => handleInputChange(e, "senderAddress")}
+                        required
                       />
                     </div>
                     <div className="flex flex-col flex-1">
@@ -116,8 +269,11 @@ const CreateInvoice = ({
                       <input
                         className="border rounded-[4px] font-bold text-base h-10 w-full pl-5  focus:outline-none focus:border-primaryPurple"
                         id="post-card"
-                        name="post-card"
+                        name="postCode"
                         type="text"
+                        value={formData.senderAddress.postCode}
+                        onChange={(e) => handleInputChange(e, "senderAddress")}
+                        required
                       />
                     </div>
                     <div className="flex flex-col flex-1">
@@ -132,6 +288,9 @@ const CreateInvoice = ({
                         id="country"
                         name="country"
                         type="text"
+                        value={formData.senderAddress.country}
+                        onChange={(e) => handleInputChange(e, "senderAddress")}
+                        required
                       />
                     </div>
                   </div>
@@ -154,8 +313,11 @@ const CreateInvoice = ({
                     <input
                       className="border rounded-[4px] font-bold text-base h-10 pl-5  focus:outline-none focus:border-primaryPurple"
                       id="client-name"
-                      name="client-name"
+                      name="clientName"
+                      value={formData.clientName}
+                      onChange={handleInputChange}
                       type="text"
+                      required
                     />
                   </div>
 
@@ -169,8 +331,11 @@ const CreateInvoice = ({
                     <input
                       className="border rounded-[4px] font-bold text-base h-10  pl-5  focus:outline-none focus:border-primaryPurple"
                       id="client-email"
-                      name="client-email"
+                      name="clientEmail"
                       type="email"
+                      value={formData.clientEmail}
+                      onChange={handleInputChange}
+                      required
                     />
                   </div>
 
@@ -184,8 +349,11 @@ const CreateInvoice = ({
                     <input
                       className="border rounded-[4px] font-bold text-base h-10 pl-5  focus:outline-none focus:border-primaryPurple"
                       id="client-street-address"
-                      name="street-address"
+                      name="street"
                       type="text"
+                      value={formData.clientAddress.street}
+                      onChange={(e) => handleInputChange(e, "clientAddress")}
+                      required
                     />
                   </div>
 
@@ -202,6 +370,9 @@ const CreateInvoice = ({
                         id="client-city"
                         name="city"
                         type="text"
+                        value={formData.clientAddress.city}
+                        onChange={(e) => handleInputChange(e, "clientAddress")}
+                        required
                       />
                     </div>
                     <div className="flex flex-col flex-1">
@@ -214,8 +385,11 @@ const CreateInvoice = ({
                       <input
                         className="border rounded-[4px] font-bold text-base h-10 pl-5  w-full focus:outline-none focus:border-primaryPurple"
                         id="client-post-card"
-                        name="post-card"
+                        name="postCode"
                         type="text"
+                        value={formData.clientAddress.postCode}
+                        onChange={(e) => handleInputChange(e, "clientAddress")}
+                        required
                       />
                     </div>
                     <div className="flex flex-col flex-1">
@@ -229,7 +403,10 @@ const CreateInvoice = ({
                         className="border rounded-[4px] font-bold text-base h-10 pl-5  w-full focus:outline-none focus:border-primaryPurple"
                         id="client-country"
                         name="country"
+                        value={formData.clientAddress.country}
+                        onChange={(e) => handleInputChange(e, "clientAddress")}
                         type="text"
+                        required
                       />
                     </div>
                   </div>
@@ -247,9 +424,12 @@ const CreateInvoice = ({
                     </label>
                     <input
                       className="border rounded-[4px] font-bold text-base h-10 pl-5  pr-5 w-full focus:outline-none focus:border-primaryPurple"
-                      id="invoice-date"
-                      name="invoice-date"
+                      id="created-at"
+                      name="createdAt"
+                      value={formData.createdAt}
+                      onChange={handleInputChange}
                       type="date"
+                      required
                     />
                   </div>
                   <div className="flex flex-col flex-1">
@@ -262,8 +442,11 @@ const CreateInvoice = ({
                     <input
                       className="border rounded-[4px] font-bold text-base h-10 pl-5  pr-5 w-full focus:outline-none focus:border-primaryPurple"
                       id="payment-terms"
-                      name="payment-terms"
+                      name="paymentTerms"
                       type="text"
+                      value={formData.paymentTerms}
+                      onChange={handleInputChange}
+                      required
                     />
                   </div>
                 </div>
@@ -277,8 +460,11 @@ const CreateInvoice = ({
                   <input
                     className="border rounded-[4px] font-bold text-base h-10 pl-5  w-full focus:outline-none focus:border-primaryPurple"
                     id="project-description"
-                    name="project-description"
+                    name="description"
                     type="text"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    required
                   />
                 </div>
               </div>
@@ -311,10 +497,9 @@ const CreateInvoice = ({
                             className="border rounded-[4px] font-bold text-base h-10 pl-5 w-full"
                             name="name"
                             type="text"
+                            required
                             value={row.name}
-                            onChange={(e) =>
-                              handleInputChange(row.id, "name", e.target.value)
-                            }
+                            onChange={(e) => handleitemChange(row.id, "name", e.target.value)}
                           />
                         </td>
                         <td className="col-span-1">
@@ -323,8 +508,9 @@ const CreateInvoice = ({
                             name="quantity"
                             type="number"
                             value={row.quantity}
+                            required
                             onChange={(e) =>
-                              handleInputChange(
+                              handleitemChange(
                                 row.id,
                                 "quantity",
                                 e.target.value
@@ -337,9 +523,10 @@ const CreateInvoice = ({
                             className="border rounded-[4px] font-bold text-base h-10 pl-5 w-full"
                             name="price"
                             type="number"
+                            required
                             value={row.price}
                             onChange={(e) =>
-                              handleInputChange(row.id, "price", e.target.value)
+                              handleitemChange(row.id, "price", e.target.value)
                             }
                           />
                         </td>
@@ -410,11 +597,12 @@ const CreateInvoice = ({
                   >
                     Discard
                   </button>
-                  <div className="flex gap-2">
-                    <button className="bg-gray-900 font-bold text-sm  text-lightBackground py-3 px-5 rounded-full">
+                  <div type="submit" className="flex gap-2">
+                    <button className="bg-gray-900 font-bold text-sm  text-lightBackground py-3 px-5 rounded-full" 
+                    onClick={(e) => submitHandler(e, 'save_draft')}>
                       Save as Draft
                     </button>
-                    <button className="bg-primaryPurple text-white font-bold text-sm  py-3 px-5 rounded-full">
+                    <button type="submit" className="bg-primaryPurple text-white font-bold text-sm  py-3 px-5 rounded-full"   onClick={(e) => submitHandler(e, 'save_send')}>
                       Save & send
                     </button>
                   </div>

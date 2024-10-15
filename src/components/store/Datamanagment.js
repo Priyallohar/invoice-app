@@ -14,10 +14,16 @@ const dataSlice= createSlice({
      },
      deleteInvoice:(state , action)=>{
         state.invoices = state.invoices.filter((invoice) => invoice.id !== action.payload);
-     }
+     },
+     addInvoice: (state, action) => {
+        state.invoices.push(action.payload);
+    },
+    updateInvoice:(state, action)=>{
+
+    }
     }
 
    
 })
-export const { markPaid,deleteInvoice } = dataSlice.actions;
+export const { markPaid,deleteInvoice,addInvoice } = dataSlice.actions;
 export default dataSlice.reducer;

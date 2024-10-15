@@ -1,0 +1,10 @@
+/* Tailwind classes handle hover and focus behavior */
+.dropdown {
+    display: none;
+  }
+  
+  .group:hover .dropdown,
+  .group:focus-within .dropdown {
+    display: block;
+  }
+  

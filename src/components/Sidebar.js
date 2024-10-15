@@ -5,7 +5,7 @@ const Sidebar = () => {
   //
   return (
     <aside className="absolute h-[100vh] inset-y-0 left-0 z-[88] overflow-hidden  hidden w-20 rounded-tr-[25px] rounded-br-[25px] flex-col bg-foreground sm:flex">
-      <nav className="flex flex-col items-center  ">
+      <nav className="flex flex-col items-center">
         <div className="bg-primaryPurple w-full h-20 flex items-center justify-center rounded-br-[25px] ">
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="26">
             <path
