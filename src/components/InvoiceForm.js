@@ -1,5 +1,5 @@
 // InvoiceForm.js
-import React from 'react';
+import React from "react";
 
 const InvoiceForm = ({
   formData,
@@ -9,7 +9,7 @@ const InvoiceForm = ({
   onSubmit,
   isEditOpen,
   closeEdit,
-  closeNewInvoice
+  closeNewInvoice,
 }) => {
   return (
     <form onSubmit={onSubmit}>
@@ -223,7 +223,9 @@ const InvoiceForm = ({
                 id="invoice-date"
                 name="createdAt"
                 type="date"
-                value={formData.createdAt ? formData.createdAt.split('T')[0] : ''}
+                value={
+                  formData.createdAt ? formData.createdAt.split("T")[0] : ""
+                }
                 onChange={onInputChange}
                 required
               />
@@ -272,10 +274,18 @@ const InvoiceForm = ({
           <table className="w-full mb-4">
             <thead>
               <tr className="text-left grid grid-cols-9 gap-4 mb-4">
-                <th className="col-span-3 text-sm font-medium text-coolGray">Item Name</th>
-                <th className="col-span-1 text-sm font-medium text-coolGray">Qty.</th>
-                <th className="col-span-2 text-sm font-medium text-coolGray">Price</th>
-                <th className="col-span-2 text-sm font-medium text-coolGray">Total</th>
+                <th className="col-span-3 text-sm font-medium text-coolGray">
+                  Item Name
+                </th>
+                <th className="col-span-1 text-sm font-medium text-coolGray">
+                  Qty.
+                </th>
+                <th className="col-span-2 text-sm font-medium text-coolGray">
+                  Price
+                </th>
+                <th className="col-span-2 text-sm font-medium text-coolGray">
+                  Total
+                </th>
                 <th className="col-span-1"></th>
               </tr>
             </thead>
@@ -287,7 +297,9 @@ const InvoiceForm = ({
                       className="border rounded-[4px] font-bold text-base h-10 w-full pl-5 focus:outline-none focus:border-primaryPurple"
                       type="text"
                       value={row.name}
-                      onChange={(e) => onItemsChange.update(row.id, "name", e.target.value)}
+                      onChange={(e) =>
+                        onItemsChange.update(row.id, "name", e.target.value)
+                      }
                       required
                     />
                   </td>
@@ -296,7 +308,9 @@ const InvoiceForm = ({
                       className="border rounded-[4px] font-bold text-base h-10 w-full pl-5 focus:outline-none focus:border-primaryPurple"
                       type="number"
                       value={row.quantity}
-                      onChange={(e) => onItemsChange.update(row.id, "quantity", e.target.value)}
+                      onChange={(e) =>
+                        onItemsChange.update(row.id, "quantity", e.target.value)
+                      }
                       required
                     />
                   </td>
@@ -305,12 +319,14 @@ const InvoiceForm = ({
                       className="border rounded-[4px] font-bold text-base h-10 w-full pl-5 focus:outline-none focus:border-primaryPurple"
                       type="number"
                       value={row.price}
-                      onChange={(e) => onItemsChange.update(row.id, "price", e.target.value)}
+                      onChange={(e) =>
+                        onItemsChange.update(row.id, "price", e.target.value)
+                      }
                       required
                     />
                   </td>
                   <td className="col-span-2 flex items-center">
-                    {row.total || '0.00'}
+                    {row.total || "0.00"}
                   </td>
                   <td className="col-span-1">
                     <button
@@ -318,7 +334,11 @@ const InvoiceForm = ({
                       onClick={() => onItemsChange.delete(row.id)}
                       className="text-coolGray hover:text-red"
                     >
-                      <svg width="13" height="16" xmlns="http://www.w3.org/2000/svg">
+                      <svg
+                        width="13"
+                        height="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
                         <path
                           d="M11.583 3.556v10.666c0 .982-.795 1.778-1.777 1.778H2.694a1.777 1.777 0 01-1.777-1.778V3.556h10.666zM8.473 0l.888.889h3.111v1.778H.028V.889h3.11L4.029 0h4.444z"
                           fill="currentColor"
@@ -378,14 +398,14 @@ const InvoiceForm = ({
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={(e) => onSubmit(e, 'save_draft')}
+                  onClick={(e) => onSubmit(e, "save_draft")}
                   className="px-6 py-4 rounded-full bg-gray-800 text-white font-bold text-sm hover:bg-gray-900 transition-colors"
                 >
                   Save as Draft
                 </button>
                 <button
                   type="submit"
-                  onClick={(e) => onSubmit(e, 'save_send')}
+                  onClick={(e) => onSubmit(e, "save_send")}
                   className="px-6 py-4 rounded-full bg-primaryPurple text-white font-bold text-sm hover:bg-primaryPurple/90 transition-colors"
                 >
                   Save & Send
