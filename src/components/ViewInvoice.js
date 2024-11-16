@@ -62,7 +62,12 @@ const ViewInvoice = ({invoiceId}) => {
     <div className="w-full bg-lightBackground">
       <ConfirmationModal isOpen={isOpen} onClose={closeModal} onDelete ={deleteHandler} />
       <Sidebar />
-      <CreateInvoice isEditOpen={isEditOpen} closeEdit={closeEditSidebar} />
+      <CreateInvoice 
+        isEditOpen={isEditOpen} 
+        closeEdit={closeEditSidebar} 
+        newInvoice={false}
+        currentInvoice={clickedInvoice}  
+      />
       {invoices.length < 1? (<EmptyInvoicePage/>) :(   <div className="w-full h-[100vh] flex flex-col items-center overflow-scroll">
         <div className="w-8/12 my-auto">
           <div className="w-full flex flex-col">
