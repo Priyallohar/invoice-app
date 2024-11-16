@@ -103,7 +103,7 @@ const CreateInvoice = ({
       const newId = generateId();
       setFormData((prevState) => ({ ...prevState, id: newId }));
     }
-  }, [newInvoice, formData.id]);
+  }, [newInvoice,formData.id]);
 
   // Reset form when closing
   useEffect(() => {
